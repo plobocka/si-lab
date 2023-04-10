@@ -84,6 +84,10 @@ public class Graph {
         return earliestConnection;
     }
 
+    public int euclideanDistance(BusStop start, BusStop end) {
+        return (int) Math.sqrt(Math.pow(start.stopLat - end.stopLat, 2) + Math.pow(start.stopLon - end.stopLon, 2));
+    }
+
     private Set<Connection> getEdgesByNames(String start, String end) {
         return edges.get(start + ";" + end);
     }

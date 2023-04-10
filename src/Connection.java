@@ -58,11 +58,11 @@ public class Connection {
 
     @Override
     public String toString() {
-        return "\tLine: " + line + '\'' +
-                "\tdepartureTime: " + departureTime +
-                "\tarrivalTime: " + arrivalTime +
-                "\tstartStop: " + startStop +
-                "\tendStop: " + endStop;
+        return line +
+                " " + departureTime +
+                " " + arrivalTime +
+                " " + startStop +
+                " " + endStop;
     }
 
     @Override

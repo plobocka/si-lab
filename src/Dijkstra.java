@@ -48,14 +48,14 @@ public class Dijkstra {
         }
 
         while(prevConnection.get(lastNode) != null) {
-            System.out.println("time so far: " + distances.get(lastNode));
+//            System.out.println("time so far: " + distances.get(lastNode));
             System.out.println(prevConnection.get(lastNode));
             lastNode = prevStops.get(lastNode);
         }
 
         System.out.println("Number of visited neighbours: " + howManyConnections);
 
-
+        /*
         while (prevStops.get(lastNode) != null) {
             System.out.print(times.get(lastNode) + " ");
             System.out.print(lastNode.name + " - ");
@@ -63,6 +63,7 @@ public class Dijkstra {
             lastNode = prevStops.get(lastNode);
             System.out.println();
         }
+        */
 
 
         return new Object[]{distances, prevStops};

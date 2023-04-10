@@ -37,9 +37,9 @@ public class BusStop {
 
     @Override
     public String toString() {
-        return "\t| name: " + name + '\'' +
-                "\t stopLat: " + stopLat +
-                "\t stopLon: " + stopLon;
+        return "\t" + name +
+                " " + stopLat +
+                " " + stopLon;
     }
 
     @Override
