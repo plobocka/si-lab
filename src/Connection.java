@@ -1,4 +1,5 @@
 import java.time.LocalTime;
+import java.util.Objects;
 
 public class Connection {
     public String line;
@@ -57,12 +58,23 @@ public class Connection {
 
     @Override
     public String toString() {
-        return "Connection{" +
-                "line='" + line + '\'' +
-                ", departureTime=" + departureTime +
-                ", arrivalTime=" + arrivalTime +
-                ", startStop=" + startStop +
-                ", endStop=" + endStop +
-                '}';
+        return "\tLine: " + line + '\'' +
+                "\tdepartureTime: " + departureTime +
+                "\tarrivalTime: " + arrivalTime +
+                "\tstartStop: " + startStop +
+                "\tendStop: " + endStop;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Connection that = (Connection) o;
+        return Objects.equals(line, that.line) && Objects.equals(departureTime, that.departureTime) && Objects.equals(arrivalTime, that.arrivalTime) && Objects.equals(startStop, that.startStop) && Objects.equals(endStop, that.endStop);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(line, departureTime, arrivalTime, startStop, endStop);
     }
 }

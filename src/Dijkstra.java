@@ -6,69 +6,64 @@ public class Dijkstra {
         BusStop startNode = graph.getNodes().get(start);
         Map<BusStop, LocalTime> times;
         times = graph.getNodes().values().stream().collect(HashMap::new, (m, v) -> m.put(v, null), HashMap::putAll);
-
-        // koszt jako odleglosc w minutach
         Map<BusStop, Double> distances = new HashMap<>();
         for (BusStop busStop : graph.getNodes().values()) {
             distances.put(busStop, Double.POSITIVE_INFINITY);
         }
         distances.put(startNode, 0.0);
-        times.put(startNode, startTime);
-
-        //times.put(startNode, startTime);
-        LocalTime currentTime = startTime;
-
-        // Kolejka priororytetowa przechowująca przystanki do odwiedzenia
         Queue queue = new PriorityQueue<>(
                 Comparator.comparingDouble(distances::get)
         );
-        queue.add(startNode);
-
-        // Mapa przechowująca poprzedników
         Map<BusStop, BusStop> prevStops = new HashMap<>();
-        for (BusStop busStop : graph.getNodes().values()) {
-            prevStops.put(busStop, null);
-        }
+        Map<BusStop, Connection> prevConnection = new HashMap<>();
 
-        var lastNode = startNode;
+        queue.add(startNode);
+        prevStops.put(startNode, null);
+        times.put(startNode, startTime);
+        LocalTime currentTime = startTime;
+        BusStop lastNode = null;
+        int howManyConnections = 0;
 
         while (!queue.isEmpty()) {
             BusStop currentNode = (BusStop) queue.poll();
             double currentDistance = distances.get(currentNode);
             lastNode = currentNode;
-
-
+            if (currentNode.name.equals(end)) {break;}
+            Connection connection = null;
             for (String neighbour : graph.getDirectConnections().get(currentNode.name)) {
-                // sasiedni przystanek jako obiekt BusStop
+                howManyConnections++;
                 BusStop neighbourNode = graph.getNodes().get(neighbour);
-                Connection connection = graph.getEarliestConnection(currentNode.name, neighbour, currentTime);
-                if (connection == null) {
-                    continue;
-                }
+                connection = graph.getEarliestConnection(currentNode.name, neighbour, currentTime);
+                if (connection == null) {continue;}
                 var newCost = currentDistance + graph.calculateCost(connection, currentTime);
                 if (newCost < distances.get(neighbourNode)) {
                     distances.put(neighbourNode, newCost);
                     prevStops.put(neighbourNode, currentNode);
-                    times.put(neighbourNode, connection.departureTime);
+                    times.put(neighbourNode, connection.arrivalTime);
+                    prevConnection.put(neighbourNode, connection);
                     queue.add(neighbourNode);
                 }
-                currentTime = prevStops.get(neighbourNode) == null ? startTime : times.get(prevStops.get(neighbourNode));
             }
-
-            if (currentNode.name.equals(end)) {
-                break;
-            }
+            currentTime = prevStops.get(queue.peek()) == null ? startTime : times.get(queue.peek());
         }
 
+        while(prevConnection.get(lastNode) != null) {
+            System.out.println("time so far: " + distances.get(lastNode));
+            System.out.println(prevConnection.get(lastNode));
+            lastNode = prevStops.get(lastNode);
+        }
+
+        System.out.println("Number of visited neighbours: " + howManyConnections);
+
+
         while (prevStops.get(lastNode) != null) {
-//            System.out.println(lastNode);
             System.out.print(times.get(lastNode) + " ");
             System.out.print(lastNode.name + " - ");
-
             System.out.print(distances.get(lastNode));
             lastNode = prevStops.get(lastNode);
             System.out.println();
         }
+
 
         return new Object[]{distances, prevStops};
     }

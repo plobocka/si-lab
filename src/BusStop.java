@@ -1,3 +1,5 @@
+import java.util.Objects;
+
 public class BusStop {
     public String name;
     public double stopLat;
@@ -35,10 +37,21 @@ public class BusStop {
 
     @Override
     public String toString() {
-        return "BusStop{" +
-                "name='" + name + '\'' +
-                ", stopLat=" + stopLat +
-                ", stopLon=" + stopLon +
-                '}';
+        return "\t| name: " + name + '\'' +
+                "\t stopLat: " + stopLat +
+                "\t stopLon: " + stopLon;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        BusStop busStop = (BusStop) o;
+        return Double.compare(busStop.stopLat, stopLat) == 0 && Double.compare(busStop.stopLon, stopLon) == 0 && Objects.equals(name, busStop.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, stopLat, stopLon);
     }
 }
