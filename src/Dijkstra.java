@@ -31,7 +31,7 @@ public class Dijkstra {
             if (currentNode.name.equals(end)) {break;}
             Connection connection = null;
             for (String neighbour : graph.getDirectConnections().get(currentNode.name)) {
-                howManyConnections++;
+
                 BusStop neighbourNode = graph.getNodes().get(neighbour);
                 connection = graph.getEarliestConnection(currentNode.name, neighbour, currentTime);
                 if (connection == null) {continue;}
@@ -42,6 +42,7 @@ public class Dijkstra {
                     times.put(neighbourNode, connection.arrivalTime);
                     prevConnection.put(neighbourNode, connection);
                     queue.add(neighbourNode);
+                    howManyConnections++;
                 }
             }
             currentTime = prevStops.get(queue.peek()) == null ? startTime : times.get(queue.peek());

@@ -59,7 +59,7 @@ public class Graph {
     }
 
     public Integer calculateCost(Connection connection, LocalTime currentTime) {
-        var result = Duration.between(currentTime, connection.departureTime).toMinutes();
+        var result = Duration.between(currentTime, connection.arrivalTime).toMinutes();
         LocalTime end_day_time = LocalTime.of(23, 59, 59);
         return (int) (
                 (result > 0
@@ -73,10 +73,10 @@ public class Graph {
         long minDuration = Long.MAX_VALUE;
         for (Connection connection : getEdgesByNames(start, end)) {
             LocalTime departureTime = connection.departureTime;
-            long duration = departureTime.isAfter(time)
+            long duration = departureTime.isAfter(time) || departureTime.equals(time)
                     ? Duration.between(time, departureTime).toMinutes()
                     : Long.MAX_VALUE;
-            if (duration < minDuration) {
+            if (duration >= 0 && duration < minDuration) {
                 minDuration = duration;
                 earliestConnection = connection;
             }
@@ -84,11 +84,24 @@ public class Graph {
         return earliestConnection;
     }
 
-    public int euclideanDistance(BusStop start, BusStop end) {
-        return (int) Math.sqrt(Math.pow(start.stopLat - end.stopLat, 2) + Math.pow(start.stopLon - end.stopLon, 2));
+    public double euclideanDistance(BusStop start, BusStop end) {
+        return Math.sqrt(Math.pow(start.stopLat - end.stopLat, 2) + Math.pow(start.stopLon - end.stopLon, 2));
+    }
+
+    public double manhattanHeuristic(BusStop a, BusStop b)
+    {
+        return (Math.abs(a.stopLat - b.stopLat) + Math.abs(a.stopLon - b.stopLon)) * 1000;
     }
 
     private Set<Connection> getEdgesByNames(String start, String end) {
         return edges.get(start + ";" + end);
+    }
+
+    public Double lineChangeCost(Connection prev, Connection next) {
+        double cost = 0;
+        if (prev != null && !prev.line.equals(next.line)) {
+            cost = 100.0;
+        }
+        return cost;
     }
 }
